@@ -68,13 +68,11 @@ def  ADX(bar period ):
     true_range  = self.true_range(bar , period )
     high = np.array( bar.High , dtype = np.float16 )
     low = np.array( bar.Low , dtype = np.float16
-    highs , lows =   high - shift(self.high , 1 ) ,  shift(self.low , 1) - low 
+    highs , lows =   high - shift(high , 1 ) ,  shift(low , 1) - low 
     
     pdm = np.where(highs > lows  , abs(highs) , 0 )
     ndm = np.where(lows  > highs , abs(lows) , 0  )
         # avg_true_range = self.sma(true_range , period )  
-    pdm_smoothed = smoothed( pdm , period)
-    ndm_smoothed = smoothed( ndm , period)
 
     atr  = sma(true_range , period)
     pdi = ( smoothed( pdm , period)  / atr ) * 100 

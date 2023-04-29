@@ -24,14 +24,6 @@ def sma (array, period ):
           sma[i-1] = np.mean(array[i-period:i] , dtype=np.float16)
     return sma 
 
-def calc(dx , period ):
-    adx = np.empty_like(dx)
-    adx = np.full( dx.shape , np.nan)
-    adx[period-1] = np.mean(dx[:period] , dtype=np.float16)
-    
-    for i in range(period, len(dx)  ):
-          adx[i] = np.array( (adx[i-1]*13 + dx[i] )/ period , dtype=np.float16)
-    return adx 
 
 def true_range( bar , period  ):
   
@@ -45,7 +37,7 @@ def true_range( bar , period  ):
     return true_range 
 
 
-def smoothed(self, array, period , alpha = None):
+def smoothed( array, period , alpha = None):
     ema = np.empty_like(array)
     ema = np.full( array.shape , np.nan)
     ema[0] = np.mean(array[0] , dtype=np.float16)
@@ -57,15 +49,6 @@ def smoothed(self, array, period , alpha = None):
     return ema 
 
 
-  def calc( array , period):
-        adx = np.empty_like(array)
-        adx = np.full( array.shape , np.nan)
-        adx[period-1] = sum( array[:period] ) / period
-
-        for i in range(period, len(array)) :
-              adx[i] = (( adx[i-1]*13 ) + array[i] ) / period 
-        return adx 
-
   def  ADX(bar period ):
         import numpy as np
         true_range  = self.true_range(bar , period )
@@ -76,11 +59,12 @@ def smoothed(self, array, period , alpha = None):
         pdm = np.where(highs > lows  , abs(highs) , 0 )
         ndm = np.where(lows  > highs , abs(lows) , 0  )
             
-        atr  = sma(true_range , period)
-        pdi = ( smoothed( pdm , period)  / atr ) * 100 
-        ndi = ( smoothed( ndm , period) / atr ) * 100
+        smoothed_atr  = smoothed(true_range , period)
+                       
+        pdi = ( smoothed( pdm , period)  / smoothed_atr ) * 100 
+        ndi = ( smoothed( ndm , period) / smoothed_atr ) * 100
         dx = ( abs(pdi - ndi) ) / ( abs(pdi + ndi) ) * 100 
-        dx = np.nan_to_num(dx , nan=0)
-        adx = calc( dx , period)
+                       
+        adx = smoothed( dx , period)
 
         return adx

@@ -60,6 +60,7 @@ def smoothed( array, period , alpha = None):
         ndm = np.where(lows  > highs , abs(lows) , 0  )
             
         smoothed_atr  = smoothed(true_range , period)
+        smoothed_atr[smoothed_atr == 0] = 0.0001            
                        
         pdi = ( smoothed( pdm , period)  / smoothed_atr ) * 100 
         ndi = ( smoothed( ndm , period) / smoothed_atr ) * 100

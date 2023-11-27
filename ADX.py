@@ -11,7 +11,7 @@ def shift(self, array , place):
     array = np.array(array , dtype= np.float16 )
     array =  array.astype(np.float16)
     shifted = np.roll(array, place)
-    shifted[0:place] = np.nan
+    shifted[0:place] = 0.0
 
     return shifted
 
@@ -32,8 +32,9 @@ def true_range( bar , period  ):
     np.array(abs(bars["Low"]-bars["Close"].shift() ),dtype=np.float16 )
 
     true_range = np.amax (np.hstack( (high_low, high_close, low_close) ).reshape(-1,3),axis=1 )
-    true_range = np.nan_to_num(true_range , nan=0) 
+    #true_range = np.nan_to_num(true_range , nan=0) 
 
+    true_range[true_range == 0] = 0.0001            
     return true_range 
 
 
